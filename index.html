@@ -4,23 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0891b2">
-    
-    <!-- ВАЖНО: убираем referrer чтобы FB/IG не блокировали переход -->
     <meta name="referrer" content="no-referrer">
-    
-    <!-- CSP разрешает navigation -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https:; form-action 'self';">
-    
     <meta property="og:title" content="Exclusive Content">
     <meta property="og:description" content="Watch the full video">
     <meta property="og:type" content="website">
-    
     <title>Exclusive Content</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-    <!-- AGE VERIFICATION MODAL -->
+    <!-- AGE MODAL -->
     <div id="ageModal" class="age-modal">
         <div class="age-modal-content">
             <div class="age-icon">🔞</div>
@@ -28,11 +20,10 @@
             <p>This content is intended for adults only.<br>Are you <span id="ageRequired">18</span> years or older?</p>
             <button id="ageYes" class="age-btn age-yes">YES, I'M 18+</button>
             <button id="ageNo" class="age-btn age-no">NO, I'M UNDER 18</button>
-            <p class="age-disclaimer">By entering you confirm you are of legal age in your jurisdiction.</p>
         </div>
     </div>
 
-    <!-- UNDERAGE BLOCK -->
+    <!-- UNDERAGE -->
     <div id="underageBlock" class="underage-block" style="display:none;">
         <div class="underage-content">
             <div class="underage-icon">⛔</div>
@@ -43,15 +34,12 @@
 
     <!-- MAIN PRELAND -->
     <div id="mainContent" class="main-content" style="display:none;">
-        
-        <!-- Dynamic background objects -->
         <div class="bg-object obj-1"></div>
         <div class="bg-object obj-2"></div>
         <div class="bg-object obj-3"></div>
         <div class="bg-object obj-4"></div>
         <div class="bg-glow"></div>
 
-        <!-- Header with model info -->
         <header class="profile-header">
             <div class="avatar-wrap">
                 <div class="avatar">
@@ -72,7 +60,6 @@
             </div>
         </header>
 
-        <!-- Stats -->
         <div class="stats-row">
             <div class="stat">
                 <div class="stat-value" id="postsCount">847</div>
@@ -88,7 +75,6 @@
             </div>
         </div>
 
-        <!-- Video preview -->
         <div class="video-preview">
             <div class="video-blur">
                 <div class="video-gradient"></div>
@@ -104,8 +90,8 @@
             </div>
         </div>
 
-        <!-- CTA BUTTON -->
-        <a href="#" id="ctaButton" class="cta-button" rel="noopener external" target="_blank">
+        <!-- ГЛАВНАЯ КНОПКА -->
+        <button id="ctaButton" class="cta-button">
             <span class="cta-pulse"></span>
             <span class="cta-text">
                 <svg class="cta-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -114,29 +100,45 @@
                 WATCH FULL VIDEO
             </span>
             <span class="cta-arrow">→</span>
-        </a>
+        </button>
 
-        <!-- Trust signals -->
+        <!-- FALLBACK КНОПКИ (показываются если авто-редирект не сработал) -->
+        <div id="fallbackButtons" class="fallback-buttons" style="display:none;">
+            <p class="fallback-text">Choose how to open:</p>
+            
+            <!-- iOS Safari -->
+            <button id="openSafari" class="fallback-btn safari-btn" style="display:none;">
+                🧭 Open in Safari
+            </button>
+            
+            <!-- iOS Chrome -->
+            <button id="openChrome" class="fallback-btn chrome-btn" style="display:none;">
+                🌐 Open in Chrome
+            </button>
+            
+            <!-- Android Chrome -->
+            <button id="openAndroidChrome" class="fallback-btn android-btn" style="display:none;">
+                📱 Open in Browser
+            </button>
+            
+            <!-- Manual instruction -->
+            <div id="manualInstruction" class="manual-instruction">
+                <p>⚠️ <strong>Tap the ••• menu</strong> (top right) and select <strong>"Open in browser"</strong></p>
+                <a href="#" id="manualLink" class="manual-link" target="_blank" rel="noopener">
+                    Or tap here to copy link
+                </a>
+            </div>
+        </div>
+
         <div class="trust-row">
             <div class="trust-item">🔒 Private & Secure</div>
             <div class="trust-item">⚡ Instant Access</div>
             <div class="trust-item">💎 HD Quality</div>
         </div>
 
-        <!-- Footer -->
         <footer class="footer">
             <p>© 2026 · <a href="#" id="termsLink">Terms</a> · <a href="#" id="privacyLink">Privacy</a> · 18+</p>
         </footer>
-    </div>
-
-    <!-- FALLBACK INSTRUCTION (скрыта по умолчанию) -->
-    <div id="fallbackInstruction" class="fallback-instruction" style="display:none;">
-        <div class="fallback-content">
-            <div class="fallback-icon">📱</div>
-            <h3>Open in Browser</h3>
-            <p>Tap the menu button and select "Open in Safari/Chrome"</p>
-            <button id="retryButton" class="retry-btn">Try Again</button>
-        </div>
     </div>
 
     <script src="config.js"></script>
