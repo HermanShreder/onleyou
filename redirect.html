@@ -36,6 +36,17 @@
             font-size: 16px;
             color: #94a3b8;
         }
+        .manual-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -45,29 +56,21 @@
     </div>
     
     <script>
-        // Получаем URL из query параметра
         const params = new URLSearchParams(window.location.search);
         const targetUrl = params.get('url') || decodeURIComponent(window.location.search.slice(1));
         
         if (targetUrl && targetUrl !== 'null') {
-            // Небольшая задержка чтобы WebView успел загрузить страницу
             setTimeout(() => {
-                // Пробуем window.location.href — WebView часто "отпускает" при редиректе
                 window.location.href = targetUrl;
                 
-                // Fallback через 2 секунды если не сработало
                 setTimeout(() => {
-                    // Пробуем window.open
                     const win = window.open(targetUrl, '_blank', 'noopener,noreferrer');
                     
                     if (!win || win.closed) {
-                        // Последний шанс — показываем ссылку для ручного клика
                         document.body.innerHTML = `
                             <div style="text-align:center; padding:20px;">
                                 <p style="margin-bottom:20px;">Click the button below to continue</p>
-                                <a href="${targetUrl}" target="_blank" rel="noopener" 
-                                   style="display:inline-block; padding:16px 32px; background:linear-gradient(135deg, #0ea5e9, #3b82f6); 
-                                          color:white; text-decoration:none; border-radius:12px; font-weight:700; font-size:18px;">
+                                <a href="${targetUrl}" target="_blank" rel="noopener" class="manual-link">
                                     Continue →
                                 </a>
                             </div>
