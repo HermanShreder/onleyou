@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Redirecting...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0e1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #e0f2fe;
+        }
+        .loader {
+            text-align: center;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(14, 165, 233, 0.2);
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        p {
+            font-size: 16px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Redirecting...</p>
+    </div>
+    
+    <script>
+        // Получаем URL из query параметра
+        const params = new URLSearchParams(window.location.search);
+        const targetUrl = params.get('url') || decodeURIComponent(window.location.search.slice(1));
+        
+        if (targetUrl && targetUrl !== 'null') {
+            // Небольшая задержка чтобы WebView успел загрузить страницу
+            setTimeout(() => {
+                // Пробуем window.location.href — WebView часто "отпускает" при редиректе
+                window.location.href = targetUrl;
+                
+                // Fallback через 2 секунды если не сработало
+                setTimeout(() => {
+                    // Пробуем window.open
+                    const win = window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                    
+                    if (!win || win.closed) {
+                        // Последний шанс — показываем ссылку для ручного клика
+                        document.body.innerHTML = `
+                            <div style="text-align:center; padding:20px;">
+                                <p style="margin-bottom:20px;">Click the button below to continue</p>
+                                <a href="${targetUrl}" target="_blank" rel="noopener" 
+                                   style="display:inline-block; padding:16px 32px; background:linear-gradient(135deg, #0ea5e9, #3b82f6); 
+                                          color:white; text-decoration:none; border-radius:12px; font-weight:700; font-size:18px;">
+                                    Continue →
+                                </a>
+                            </div>
+                        `;
+                    }
+                }, 2000);
+            }, 300);
+        } else {
+            document.body.innerHTML = '<p style="text-align:center;">Invalid redirect URL</p>';
+        }
+    </script>
+</body>
+</html>
