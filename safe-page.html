@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Meta tags для FB/IG превью -->
+    <meta property="og:title" content="Digital Marketing Tips & Strategies">
+    <meta property="og:description" content="Learn the latest digital marketing trends, SEO tips, and social media strategies to grow your business online.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/0ea5e9/ffffff?text=Digital+Marketing+Blog">
+    
+    <title>Digital Marketing Blog | Tips & Strategies</title>
+    
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        :root {
+            --blue-1: #0ea5e9;
+            --blue-2: #06b6d4;
+            --blue-3: #3b82f6;
+            --blue-dark: #0c4a6e;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--blue-1);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--blue-1);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Blog Posts */
+        .blog-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .post-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(59, 130, 246, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .post-content {
+            padding: 24px;
+        }
+
+        .post-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--blue-1);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .post-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .post-excerpt {
+            color: var(--text-gray);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .post-date {
+            font-size: 13px;
+        }
+
+        /* Features Section */
+        .features {
+            background: var(--bg-white);
+            padding: 60px 20px;
+            margin: 40px 0;
+        }
+
+        .features-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 32px 24px;
+            border-radius: 16px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            color: var(--text-gray);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .newsletter-box {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(59, 130, 246, 0.05));
+            border: 2px solid var(--blue-1);
+            border-radius: 24px;
+            padding: 48px 32px;
+        }
+
+        .newsletter h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .newsletter p {
+            color: var(--text-gray);
+            margin-bottom: 24px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .newsletter-input:focus {
+            border-color: var(--blue-1);
+        }
+
+        .newsletter-btn {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .newsletter-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+        }
+
+        .footer-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: var(--blue-1);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 32px auto 0;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">📈</div>
+                Digital Marketing Blog
+            </a>
+            <nav class="nav">
+                <a href="#">Home</a>
+                <a href="#">SEO</a>
+                <a href="#">Social Media</a>
+                <a href="#">Content</a>
+                <a href="#">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Master Digital Marketing</h1>
+        <p>Learn the latest strategies, tips, and tools to grow your business online and dominate your market.</p>
+        <a href="#" class="hero-btn">Start Learning →</a>
+    </section>
+
+    <!-- Blog Posts -->
+    <section class="blog-section">
+        <h2 class="section-title">Latest Articles</h2>
+        
+        <div class="posts-grid">
+            <article class="post-card">
+                <div class="post-image">🎯</div>
+                <div class="post-content">
+                    <span class="post-category">SEO</span>
+                    <h3 class="post-title">10 SEO Strategies That Will Boost Your Rankings in 2026</h3>
+                    <p class="post-excerpt">Discover the most effective SEO techniques that top marketers are using to dominate search results this year.</p>
+                    <div class="post-meta">
+                        <div class="post-author">
+                            <div class="author-avatar">JD</div>
+                            <span>John Davis</span>
+                        </div>
+                        <span class="post-date">Jul 15, 2026</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-image">📱</div>
+                <div class="post-content">
+                    <span class="post-category">Social Media</span>
+                    <h3 class="post-title">How to Create Viral Content on Instagram Reels</h3>
+                    <p class="post-excerpt">Learn the secrets behind viral Reels and how to consistently create content that gets millions of views.</p>
+                    <div class="post-meta">
+                        <div class="post-author">
+                            <div class="author-avatar">SM</div>
+                            <span>Sarah Miller</span>
+                        </div>
+                        <span class="post-date">Jul 12, 2026</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-image">💡</div>
+                <div class="post-content">
+                    <span class="post-category">Content Marketing</span>
+                    <h3 class="post-title">The Ultimate Guide to Content Marketing in 2026</h3>
+                    <p class="post-excerpt">Everything you need to know about creating, distributing, and monetizing content that converts.</p>
+                    <div class="post-meta">
+                        <div class="post-author">
+                            <div class="author-avatar">MR</div>
+                            <span>Mike Roberts</span>
+                        </div>
+                        <span class="post-date">Jul 10, 2026</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-content">
+            <h2 class="section-title">Why Choose Our Blog?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">Expert Content</h3>
+                    <p class="feature-desc">Written by industry professionals with years of experience.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Up-to-Date</h3>
+                    <p class="feature-desc">Fresh content updated weekly with the latest trends.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎓</div>
+                    <h3 class="feature-title">Beginner Friendly</h3>
+                    <p class="feature-desc">Easy to understand guides for all skill levels.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">Actionable Tips</h3>
+                    <p class="feature-desc">Practical advice you can implement immediately.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="newsletter-box">
+            <h2>Stay Updated</h2>
+            <p>Get the latest marketing tips and strategies delivered to your inbox weekly.</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+                <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+                <button type="submit" class="newsletter-btn">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About</h3>
+                <a href="#">About Us</a>
+                <a href="#">Our Team</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <a href="#">SEO</a>
+                <a href="#">Social Media</a>
+                <a href="#">Content Marketing</a>
+                <a href="#">Email Marketing</a>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="#">Free Tools</a>
+                <a href="#">Templates</a>
+                <a href="#">Case Studies</a>
+                <a href="#">Webinars</a>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Disclaimer</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 Digital Marketing Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
