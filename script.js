@@ -2,7 +2,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     applyConfig();
     initAgeGate();
+    detectPlatform();
 });
+
+// ===== PLATFORM DETECTION =====
+let platform = {
+    isIOS: false,
+    isAndroid: false,
+    isFB: false,
+    isIG: false,
+    isWebView: false
+};
+
+function detectPlatform() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    
+    platform.isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    platform.isAndroid = /Android/.test(ua);
+    platform.isFB = /FBAN|FBAV|FBIOS/i.test(ua);
+    platform.isIG = /Instagram/i.test(ua);
+    platform.isWebView = platform.isFB || platform.isIG;
+    
+    console.log('[Platform]', platform);
+}
 
 // ===== APPLY CONFIG =====
 function applyConfig() {
@@ -83,26 +105,13 @@ function initCTA() {
     // Update href as primary method
     cta.href = offerUrl;
     
-    // Multi-method redirect for FB/IG in-app browser compatibility
+    // Multi-method redirect for FB/IG in-app browser
     const doRedirect = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         trackEvent('cta_click');
         
-        // Method 1: window.open with noopener (works in most WebView)
-        const newWin = window.open(offerUrl, '_blank', 'noopener,noreferrer');
-        
-        // Method 2: fallback if popup blocked
-        if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
-            // Try top-level navigation (breaks out of iframe-like WebView)
-            if (window.top && window.top !== window.self) {
-                try {
-                    window.top.location.href = offerUrl;
-                    return;
-                } catch(err) {}
-            }
-            // Final fallback: current window
-            window.location.href = offerUrl;
-        }
+        // Запускаем цепочку методов увода
+        attemptRedirect(offerUrl, 0);
     };
     
     // Bind both touch and click for mobile + desktop
@@ -116,6 +125,157 @@ function initCTA() {
         if (touched) { touched = false; return; }
         doRedirect(e);
     });
+    
+    // Retry button
+    const retryBtn = document.getElementById('retryButton');
+    if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+            document.getElementById('fallbackInstruction').style.display = 'none';
+            attemptRedirect(offerUrl, 0);
+        });
+    }
+}
+
+// ===== MULTI-METHOD REDIRECT =====
+let redirectAttempt = 0;
+const MAX_ATTEMPTS = 4;
+
+function attemptRedirect(url, attempt) {
+    redirectAttempt = attempt;
+    
+    if (attempt >= MAX_ATTEMPTS) {
+        // Все методы не сработали — показываем инструкцию
+        showFallbackInstruction();
+        return;
+    }
+    
+    console.log(`[Redirect] Attempt ${attempt + 1}/${MAX_ATTEMPTS}`);
+    
+    switch(attempt) {
+        case 0:
+            // Метод 1: window.open с noopener (работает в большинстве WebView)
+            method1_WindowOpen(url);
+            break;
+        case 1:
+            // Метод 2: Промежуточная страница redirect.html
+            method2_IntermediateRedirect(url);
+            break;
+        case 2:
+            // Метод 3: Custom URL scheme (iOS: Chrome/Safari, Android: Intent)
+            method3_CustomScheme(url);
+            break;
+        case 3:
+            // Метод 4: window.location.href (последний шанс)
+            method4_DirectLocation(url);
+            break;
+    }
+}
+
+// Метод 1: window.open
+function method1_WindowOpen(url) {
+    console.log('[Method 1] window.open');
+    
+    const newWin = window.open(url, '_blank', 'noopener,noreferrer');
+    
+    // Проверяем что окно открылось
+    setTimeout(() => {
+        if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+            console.log('[Method 1] Failed, trying next method');
+            attemptRedirect(url, redirectAttempt + 1);
+        } else {
+            console.log('[Method 1] Success');
+        }
+    }, 500);
+}
+
+// Метод 2: Промежуточная страница
+function method2_IntermediateRedirect(url) {
+    console.log('[Method 2] Intermediate redirect');
+    
+    // Создаём URL для промежуточной страницы
+    const redirectUrl = `redirect.html?${encodeURIComponent(url)}`;
+    
+    // Небольшая задержка чтобы WebView успел обработать
+    setTimeout(() => {
+        window.location.href = redirectUrl;
+    }, 100);
+}
+
+// Метод 3: Custom URL schemes
+function method3_CustomScheme(url) {
+    console.log('[Method 3] Custom URL scheme');
+    
+    const parsedUrl = new URL(url);
+    const host = parsedUrl.host;
+    const path = parsedUrl.pathname + parsedUrl.search;
+    
+    let customUrl = null;
+    
+    if (platform.isIOS) {
+        // iOS: пробуем открыть в Chrome или Safari
+        // googlechrome://navigate?url=...
+        customUrl = `googlechrome://navigate?url=${encodeURIComponent(url)}`;
+        
+        // Fallback: используем window.location.href с custom scheme
+        setTimeout(() => {
+            window.location.href = customUrl;
+            
+            // Если не сработало через 1.5с — пробуем следующий метод
+            setTimeout(() => {
+                attemptRedirect(url, redirectAttempt + 1);
+            }, 1500);
+        }, 100);
+        
+    } else if (platform.isAndroid) {
+        // Android: используем intent:// scheme
+        // intent://host/path#Intent;scheme=https;package=com.android.chrome;end
+        customUrl = `intent://${host}${path}#Intent;scheme=${parsedUrl.protocol.replace(':', '')};package=com.android.chrome;end`;
+        
+        setTimeout(() => {
+            window.location.href = customUrl;
+            
+            // Если не сработало — пробуем следующий метод
+            setTimeout(() => {
+                attemptRedirect(url, redirectAttempt + 1);
+            }, 1500);
+        }, 100);
+        
+    } else {
+        // Desktop или неизвестная платформа — сразу к следующему методу
+        attemptRedirect(url, redirectAttempt + 1);
+    }
+}
+
+// Метод 4: Прямой window.location.href
+function method4_DirectLocation(url) {
+    console.log('[Method 4] Direct window.location.href');
+    
+    // На iOS FB WebView это часто открывает Safari автоматически
+    // На Android может остаться внутри WebView, но это последний шанс
+    
+    // Используем window.top.location если мы внутри iframe
+    if (window.top && window.top !== window.self) {
+        try {
+            window.top.location.href = url;
+            return;
+        } catch(err) {
+            console.log('[Method 4] window.top failed, using window.location');
+        }
+    }
+    
+    window.location.href = url;
+}
+
+// ===== FALLBACK INSTRUCTION =====
+function showFallbackInstruction() {
+    console.log('[Fallback] Showing instruction');
+    
+    const fallback = document.getElementById('fallbackInstruction');
+    if (fallback) {
+        fallback.style.display = 'flex';
+    }
+    
+    trackEvent('redirect_fallback');
 }
 
 // ===== TRACKING =====
