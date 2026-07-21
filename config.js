@@ -1,5 +1,6 @@
 // ===== НАСТРОЙКИ ПРЕЛЕНДА =====
 const CONFIG = {
+    SAFE_URL: "https://yourdomain.com/safe-page.html",  // ← Безопасная страница
     OFFER_URL: "https://qwen.ai/home",  // ← КУДА ВЕДЁМ
     SAFE_URL: "https://yourdomain.com/safe-page",      // ← Для модерации FB (обычный блог)
     MODEL_NAME: "Sophia_Blue",
