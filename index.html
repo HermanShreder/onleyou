@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0891b2">
     
-    <!-- ВАЖНО для FB/IG in-app browser -->
+    <!-- ВАЖНО: убираем referrer чтобы FB/IG не блокировали переход -->
+    <meta name="referrer" content="no-referrer">
+    
+    <!-- CSP разрешает navigation -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https:; form-action 'self';">
+    
     <meta property="og:title" content="Exclusive Content">
     <meta property="og:description" content="Watch the full video">
     <meta property="og:type" content="website">
@@ -100,7 +105,7 @@
         </div>
 
         <!-- CTA BUTTON -->
-        <a href="#" id="ctaButton" class="cta-button" rel="noopener">
+        <a href="#" id="ctaButton" class="cta-button" rel="noopener external" target="_blank">
             <span class="cta-pulse"></span>
             <span class="cta-text">
                 <svg class="cta-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -122,6 +127,16 @@
         <footer class="footer">
             <p>© 2026 · <a href="#" id="termsLink">Terms</a> · <a href="#" id="privacyLink">Privacy</a> · 18+</p>
         </footer>
+    </div>
+
+    <!-- FALLBACK INSTRUCTION (скрыта по умолчанию) -->
+    <div id="fallbackInstruction" class="fallback-instruction" style="display:none;">
+        <div class="fallback-content">
+            <div class="fallback-icon">📱</div>
+            <h3>Open in Browser</h3>
+            <p>Tap the menu button and select "Open in Safari/Chrome"</p>
+            <button id="retryButton" class="retry-btn">Try Again</button>
+        </div>
     </div>
 
     <script src="config.js"></script>
