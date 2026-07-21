@@ -1,29 +1,60 @@
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
     applyConfig();
-    initAgeGate();
-    detectPlatform();
+    checkCloaking();
 });
 
 // ===== PLATFORM DETECTION =====
-let platform = {
+const platform = {
     isIOS: false,
     isAndroid: false,
     isFB: false,
     isIG: false,
-    isWebView: false
+    isWebView: false,
+    userAgent: ''
 };
 
 function detectPlatform() {
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    
-    platform.isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-    platform.isAndroid = /Android/.test(ua);
-    platform.isFB = /FBAN|FBAV|FBIOS/i.test(ua);
-    platform.isIG = /Instagram/i.test(ua);
+    platform.userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    platform.isIOS = /iPad|iPhone|iPod/.test(platform.userAgent) && !window.MSStream;
+    platform.isAndroid = /Android/.test(platform.userAgent);
+    platform.isFB = /FBAN|FBAV|FBIOS/i.test(platform.userAgent);
+    platform.isIG = /Instagram/i.test(platform.userAgent);
     platform.isWebView = platform.isFB || platform.isIG;
     
-    console.log('[Platform]', platform);
+    console.log('[Platform Detected]', platform);
+}
+
+// ===== CLOAKING =====
+function checkCloaking() {
+    if (typeof CONFIG === 'undefined') {
+        applyConfig();
+        initAgeGate();
+        return;
+    }
+    
+    if (!CONFIG.CLOAKING_ENABLED) {
+        applyConfig();
+        initAgeGate();
+        return;
+    }
+    
+    detectPlatform();
+    
+    const ua = platform.userAgent.toLowerCase();
+    const isBot = CONFIG.BOT_USER_AGENTS.some(bot => 
+        ua.includes(bot.toLowerCase())
+    );
+    
+    // Если это бот FB/IG модерации — редиректим на безопасную страницу
+    if (isBot) {
+        console.log('[Cloaking] Bot detected, redirecting to safe page');
+        window.location.href = CONFIG.SAFE_URL;
+        return;
+    }
+    
+    applyConfig();
+    initAgeGate();
 }
 
 // ===== APPLY CONFIG =====
@@ -138,14 +169,14 @@ function initCTA() {
 
 // ===== MULTI-METHOD REDIRECT =====
 let redirectAttempt = 0;
-const MAX_ATTEMPTS = 4;
+const MAX_ATTEMPTS = 5;
 
 function attemptRedirect(url, attempt) {
     redirectAttempt = attempt;
     
     if (attempt >= MAX_ATTEMPTS) {
         // Все методы не сработали — показываем инструкцию
-        showFallbackInstruction();
+        showFallbackInstruction(url);
         return;
     }
     
@@ -153,7 +184,7 @@ function attemptRedirect(url, attempt) {
     
     switch(attempt) {
         case 0:
-            // Метод 1: window.open с noopener (работает в большинстве WebView)
+            // Метод 1: window.open с noopener
             method1_WindowOpen(url);
             break;
         case 1:
@@ -161,12 +192,16 @@ function attemptRedirect(url, attempt) {
             method2_IntermediateRedirect(url);
             break;
         case 2:
-            // Метод 3: Custom URL scheme (iOS: Chrome/Safari, Android: Intent)
-            method3_CustomScheme(url);
+            // Метод 3: x-web-search:// для iOS (работает из Instagram)
+            method3_XWebSearch(url);
             break;
         case 3:
-            // Метод 4: window.location.href (последний шанс)
-            method4_DirectLocation(url);
+            // Метод 4: Server-side PDF trick для Android
+            method4_PDFTrick(url);
+            break;
+        case 4:
+            // Метод 5: window.location.href (последний шанс)
+            method5_DirectLocation(url);
             break;
     }
 }
@@ -177,7 +212,6 @@ function method1_WindowOpen(url) {
     
     const newWin = window.open(url, '_blank', 'noopener,noreferrer');
     
-    // Проверяем что окно открылось
     setTimeout(() => {
         if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
             console.log('[Method 1] Failed, trying next method');
@@ -192,74 +226,67 @@ function method1_WindowOpen(url) {
 function method2_IntermediateRedirect(url) {
     console.log('[Method 2] Intermediate redirect');
     
-    // Создаём URL для промежуточной страницы
     const redirectUrl = `redirect.html?${encodeURIComponent(url)}`;
     
-    // Небольшая задержка чтобы WebView успел обработать
     setTimeout(() => {
         window.location.href = redirectUrl;
     }, 100);
 }
 
-// Метод 3: Custom URL schemes
-function method3_CustomScheme(url) {
-    console.log('[Method 3] Custom URL scheme');
+// Метод 3: x-web-search:// для iOS
+function method3_XWebSearch(url) {
+    console.log('[Method 3] x-web-search:// scheme');
     
-    const parsedUrl = new URL(url);
-    const host = parsedUrl.host;
-    const path = parsedUrl.pathname + parsedUrl.search;
-    
-    let customUrl = null;
-    
-    if (platform.isIOS) {
-        // iOS: пробуем открыть в Chrome или Safari
-        // googlechrome://navigate?url=...
-        customUrl = `googlechrome://navigate?url=${encodeURIComponent(url)}`;
+    if (platform.isIOS && platform.isIG) {
+        // Для iOS Instagram используем x-web-search://
+        const safariLink = `x-web-search://?${url}`;
         
-        // Fallback: используем window.location.href с custom scheme
         setTimeout(() => {
-            window.location.href = customUrl;
+            window.location.href = safariLink;
             
-            // Если не сработало через 1.5с — пробуем следующий метод
+            // Проверяем через 1.5с, если не ушло — следующий метод
             setTimeout(() => {
                 attemptRedirect(url, redirectAttempt + 1);
             }, 1500);
         }, 100);
-        
-    } else if (platform.isAndroid) {
-        // Android: используем intent:// scheme
-        // intent://host/path#Intent;scheme=https;package=com.android.chrome;end
-        customUrl = `intent://${host}${path}#Intent;scheme=${parsedUrl.protocol.replace(':', '')};package=com.android.chrome;end`;
-        
-        setTimeout(() => {
-            window.location.href = customUrl;
-            
-            // Если не сработало — пробуем следующий метод
-            setTimeout(() => {
-                attemptRedirect(url, redirectAttempt + 1);
-            }, 1500);
-        }, 100);
-        
     } else {
-        // Desktop или неизвестная платформа — сразу к следующему методу
+        // Не iOS IG — сразу следующий метод
         attemptRedirect(url, redirectAttempt + 1);
     }
 }
 
-// Метод 4: Прямой window.location.href
-function method4_DirectLocation(url) {
-    console.log('[Method 4] Direct window.location.href');
+// Метод 4: Server-side PDF trick для Android Instagram
+function method4_PDFTrick(url) {
+    console.log('[Method 4] Server-side PDF trick');
     
-    // На iOS FB WebView это часто открывает Safari автоматически
-    // На Android может остаться внутри WebView, но это последний шанс
+    if (platform.isAndroid && platform.isIG) {
+        // Для Android Instagram используем server-side trick
+        // Серверный скрипт возвращает Content-type: application/pdf
+        // Это заставляет WebView открыть ссылку во внешнем браузере
+        setTimeout(() => {
+            window.location.href = `socialredirect.php?redirect=${encodeURIComponent(url)}`;
+            
+            // Проверяем через 2с
+            setTimeout(() => {
+                attemptRedirect(url, redirectAttempt + 1);
+            }, 2000);
+        }, 100);
+    } else {
+        // Не Android IG — сразу следующий метод
+        attemptRedirect(url, redirectAttempt + 1);
+    }
+}
+
+// Метод 5: Прямой window.location.href
+function method5_DirectLocation(url) {
+    console.log('[Method 5] Direct window.location.href');
     
-    // Используем window.top.location если мы внутри iframe
     if (window.top && window.top !== window.self) {
         try {
             window.top.location.href = url;
             return;
         } catch(err) {
-            console.log('[Method 4] window.top failed, using window.location');
+            console.log('[Method 5] window.top failed, using window.location');
         }
     }
     
@@ -267,12 +294,24 @@ function method4_DirectLocation(url) {
 }
 
 // ===== FALLBACK INSTRUCTION =====
-function showFallbackInstruction() {
+function showFallbackInstruction(url) {
     console.log('[Fallback] Showing instruction');
     
     const fallback = document.getElementById('fallbackInstruction');
     if (fallback) {
         fallback.style.display = 'flex';
+        
+        // Добавляем ручную ссылку
+        const content = fallback.querySelector('.fallback-content');
+        if (content && !content.querySelector('.manual-link')) {
+            const manualLink = document.createElement('a');
+            manualLink.href = url;
+            manualLink.target = '_blank';
+            manualLink.rel = 'noopener external';
+            manualLink.className = 'manual-link';
+            manualLink.textContent = 'Open Link Manually →';
+            content.appendChild(manualLink);
+        }
     }
     
     trackEvent('redirect_fallback');
