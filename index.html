@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0891b2">
+    
+    <!-- ВАЖНО для FB/IG in-app browser -->
+    <meta property="og:title" content="Exclusive Content">
+    <meta property="og:description" content="Watch the full video">
+    <meta property="og:type" content="website">
+    
+    <title>Exclusive Content</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- AGE VERIFICATION MODAL -->
+    <div id="ageModal" class="age-modal">
+        <div class="age-modal-content">
+            <div class="age-icon">🔞</div>
+            <h2>Age Verification</h2>
+            <p>This content is intended for adults only.<br>Are you <span id="ageRequired">18</span> years or older?</p>
+            <button id="ageYes" class="age-btn age-yes">YES, I'M 18+</button>
+            <button id="ageNo" class="age-btn age-no">NO, I'M UNDER 18</button>
+            <p class="age-disclaimer">By entering you confirm you are of legal age in your jurisdiction.</p>
+        </div>
+    </div>
+
+    <!-- UNDERAGE BLOCK -->
+    <div id="underageBlock" class="underage-block" style="display:none;">
+        <div class="underage-content">
+            <div class="underage-icon">⛔</div>
+            <h2>Access Denied</h2>
+            <p>You must be 18+ to view this content.</p>
+        </div>
+    </div>
+
+    <!-- MAIN PRELAND -->
+    <div id="mainContent" class="main-content" style="display:none;">
+        
+        <!-- Dynamic background objects -->
+        <div class="bg-object obj-1"></div>
+        <div class="bg-object obj-2"></div>
+        <div class="bg-object obj-3"></div>
+        <div class="bg-object obj-4"></div>
+        <div class="bg-glow"></div>
+
+        <!-- Header with model info -->
+        <header class="profile-header">
+            <div class="avatar-wrap">
+                <div class="avatar">
+                    <div class="avatar-placeholder">SB</div>
+                </div>
+                <div class="live-indicator"></div>
+            </div>
+            <div class="profile-info">
+                <h1 class="model-name">
+                    <span id="modelName">Sophia_Blue</span>
+                    <svg class="verified-badge" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="#0ea5e9"/>
+                        <path d="M8 12l2.5 2.5L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </h1>
+                <p class="model-handle">@sophia_blue · <span id="modelAge">23</span></p>
+                <p class="model-bio">✨ New exclusive video just dropped 🔥</p>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-value" id="postsCount">847</div>
+                <div class="stat-label">Posts</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="fansCount">124.5K</div>
+                <div class="stat-label">Fans</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="likesCount">2.3M</div>
+                <div class="stat-label">Likes</div>
+            </div>
+        </div>
+
+        <!-- Video preview -->
+        <div class="video-preview">
+            <div class="video-blur">
+                <div class="video-gradient"></div>
+                <div class="play-icon-wrap">
+                    <div class="play-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="video-duration" id="videoDuration">12:47</div>
+                <div class="video-badge">EXCLUSIVE</div>
+            </div>
+        </div>
+
+        <!-- CTA BUTTON -->
+        <a href="#" id="ctaButton" class="cta-button" rel="noopener">
+            <span class="cta-pulse"></span>
+            <span class="cta-text">
+                <svg class="cta-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                WATCH FULL VIDEO
+            </span>
+            <span class="cta-arrow">→</span>
+        </a>
+
+        <!-- Trust signals -->
+        <div class="trust-row">
+            <div class="trust-item">🔒 Private & Secure</div>
+            <div class="trust-item">⚡ Instant Access</div>
+            <div class="trust-item">💎 HD Quality</div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 · <a href="#" id="termsLink">Terms</a> · <a href="#" id="privacyLink">Privacy</a> · 18+</p>
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
