@@ -1,9 +1,9 @@
 // ===== НАСТРОЙКИ ПРЕЛЕНДА =====
 const CONFIG = {
-    SAFE_URL: "https://yourdomain.com/safe-page.html",  // ← Безопасная страница
-    OFFER_URL: "https://qwen.ai/home",  // ← КУДА ВЕДЁМ
-    SAFE_URL: "https://yourdomain.com/safe-page",      // ← Для модерации FB (обычный блог)
-    MODEL_NAME: "Sophia_Blue",
+    SAFE_URL: "https://chatgpt.com/",  // ← Безопасная страница
+    OFFER_URL: "https://onlyfans.com/clubmila/trial/br8sz4g649t0gqafx1vjtppzi7mgprpl",  // ← КУДА ВЕДЁМ
+    SAFE_URL: "https://chatgpt.com/",      // ← Для модерации FB (обычный блог)
+    MODEL_NAME: "Clumbia",
     MODEL_AGE: 23,
     MODEL_VERIFIED: true,
     FANS_COUNT: "124.5K",
